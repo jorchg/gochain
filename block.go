@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/gob"
 	"encoding/hex"
+	"log"
 	// "github.com/davecgh/go-spew/spew"
 	// "sync"
 	"time"
@@ -17,6 +18,13 @@ type Block struct {
 	Timestamp int64
 	Data      interface{}
 	Hash      string
+}
+
+type DataToHash struct {
+	Index     uint64
+	PrevHash  string
+	Timestamp int64
+	Data      []byte
 }
 
 func newBlock(Data interface{}) (*Block, error) {
@@ -42,6 +50,19 @@ func newBlock(Data interface{}) (*Block, error) {
 	var dataBuf bytes.Buffer
 	enc := gob.NewEncoder(&dataBuf)
 	err := enc.Encode(Data)
+	if err != nil {
+		log.Fatal("Encoding error: ", err)
+		return nil, err
+	}
+
+	dataToHash := DataToHash{
+		Index,
+		PrevHash,
+		Timestamp,
+		dataBuf.Bytes(),
+	}
+	enc = gob.NewEncoder(&dataBuf)
+	err = enc.Encode(dataToHash)
 	if err != nil {
 		return nil, err
 	}
