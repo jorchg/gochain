@@ -19,6 +19,8 @@ type Message struct {
 	Name string
 }
 
+type ArbitraryMessage interface{}
+
 var addr = flag.String("addr", "localhost:3000", "http service address")
 
 func main() {
@@ -50,14 +52,15 @@ func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Unmarshal
-	var msg Message
-	err = json.Unmarshal(b, &msg)
+	// var msg Message
+	var arbitrary ArbitraryMessage
+	err = json.Unmarshal(b, &arbitrary)
 	if err != nil {
 		http.Error(res, err.Error(), 500)
 		return
 	}
 
-	output, err := json.Marshal(msg)
+	output, err := json.Marshal(arbitrary)
 	if err != nil {
 		http.Error(res, err.Error(), 500)
 		return
