@@ -11,12 +11,8 @@ import (
 	"net/http"
 )
 
-type test_struct struct {
-	Test string
-}
-
 type Message struct {
-	Data string
+	Data interface{}
 }
 
 type ArbitraryMessage interface{}

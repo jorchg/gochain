@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
+	"encoding/gob"
 	"encoding/hex"
 	// "github.com/davecgh/go-spew/spew"
 	// "sync"
@@ -9,9 +11,9 @@ import (
 )
 
 type Block struct {
-	Index     uint64
-	PrevHash  string
-	PrevBlock *Block
+	Index    uint64
+	PrevHash string
+	// PrevBlock *Block
 	Timestamp int64
 	Data      interface{}
 	Hash      string
@@ -33,11 +35,17 @@ func newBlock(Data interface{}) (*Block, error) {
 
 	Index := lastBlock.Index + 1
 	PrevHash := lastBlock.Hash
-	PrevBlock := lastBlock
+	// PrevBlock := lastBlock
 	Timestamp := time.Now().Unix()
 	hash := sha256.New()
 
-	_, err := hash.Write([]byte(Data.(string)))
+	var dataBuf bytes.Buffer
+	enc := gob.NewEncoder(&dataBuf)
+	err := enc.Encode(Data)
+	if err != nil {
+		return nil, err
+	}
+	_, err = hash.Write([]byte(dataBuf.Bytes()))
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +54,7 @@ func newBlock(Data interface{}) (*Block, error) {
 	return &Block{
 		Index,
 		PrevHash,
-		PrevBlock,
+		// PrevBlock,
 		Timestamp,
 		Data,
 		Hash,

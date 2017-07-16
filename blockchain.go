@@ -40,9 +40,9 @@ func createGenesisBlock(writeChannel chan *BlockChain) {
 	}
 
 	block := Block{
-		Index:     0,
-		PrevHash:  "",
-		PrevBlock: nil,
+		Index:    0,
+		PrevHash: "",
+		// PrevBlock: nil,
 		Timestamp: time.Now().Unix(),
 		Data:      "",
 		Hash:      "",
