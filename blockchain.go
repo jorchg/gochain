@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"github.com/davecgh/go-spew/spew"
-	// "log"
+	// "github.com/davecgh/go-spew/spew"
 	"sync"
+	"time"
 )
 
 type BlockChain struct {
@@ -26,6 +25,7 @@ func getLastBlock(readChannel chan *Block) {
 	// TODO: defer
 	if len(blockChain.Blocks) == 0 {
 		readChannel <- nil
+		return
 	}
 
 	readChannel <- blockChain.Blocks[len(blockChain.Blocks)-1]
@@ -39,10 +39,15 @@ func createGenesisBlock(writeChannel chan *BlockChain) {
 		return
 	}
 
-	block := Block{Data: "TEST"}
+	block := Block{
+		Index:     0,
+		PrevHash:  "",
+		PrevBlock: nil,
+		Timestamp: time.Now().Unix(),
+		Data:      "",
+		Hash:      "",
+	}
 	blockChain.Blocks = append(blockChain.Blocks, &block)
-	fmt.Println("CREATING GENESIS BLOCK: ", block)
-	spew.Dump("BLOCKCHAIN: ", blockChain.Blocks)
 	writeChannel <- blockChain
 	return
 }

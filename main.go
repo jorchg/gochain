@@ -16,8 +16,7 @@ type test_struct struct {
 }
 
 type Message struct {
-	Id   int64
-	Name string
+	Data string
 }
 
 type ArbitraryMessage interface{}
@@ -53,21 +52,21 @@ func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Unmarshal
-	// var msg Message
-	var arbitrary ArbitraryMessage
-	err = json.Unmarshal(b, &arbitrary)
+	var msg Message
+	// var arbitrary ArbitraryMessage
+	err = json.Unmarshal(b, &msg)
 	if err != nil {
 		http.Error(res, err.Error(), 500)
 		return
 	}
 
 	writeChannel := make(chan *BlockChain, 1)
-	newBlock := Block{Data: "TEST"}
-	go mineBlock(&newBlock, writeChannel)
+	newBlock, _ := newBlock(msg.Data)
+	go mineBlock(newBlock, writeChannel)
 	blockChain := <-writeChannel
-	spew.Dump("BLOCKCHAINGENESIS: ", blockChain.Blocks)
+	spew.Dump("BLOCKCHAIN: ", blockChain.Blocks)
 
-	output, err := json.Marshal(arbitrary)
+	output, err := json.Marshal(msg)
 	if err != nil {
 		http.Error(res, err.Error(), 500)
 		return
