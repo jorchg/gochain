@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/gob"
 	"encoding/hex"
-	"log"
 	// "github.com/davecgh/go-spew/spew"
 	// "sync"
 	"time"
@@ -51,7 +50,6 @@ func newBlock(Data interface{}) (*Block, error) {
 	enc := gob.NewEncoder(&dataBuf)
 	err := enc.Encode(Data)
 	if err != nil {
-		log.Fatal("Encoding error: ", err)
 		return nil, err
 	}
 

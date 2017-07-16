@@ -32,6 +32,14 @@ func handleRouteGetPeers(res http.ResponseWriter, req *http.Request) {
 	io.WriteString(res, "Yeah!!")
 }
 
+func readBodyRequest(req *http.Request) ([]byte, error) {
+	body, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return nil, err
+	}
+	return body, nil
+}
+
 func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
 		http.Error(res, "mineBlock route method must be POST", http.StatusBadRequest)
@@ -40,8 +48,8 @@ func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// Read body
-	b, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
+	b, err := readBodyRequest(req)
 	if err != nil {
 		http.Error(res, err.Error(), 500)
 		return
@@ -67,6 +75,7 @@ func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), 500)
 		return
 	}
+
 	res.Header().Set("content-type", "application/json")
 	res.Write(output)
 }
