@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/davecgh/go-spew/spew"
 	// "github.com/gorilla/websocket"
 	"encoding/json"
 	"io"
@@ -59,6 +60,12 @@ func handleRouteMineBlock(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, err.Error(), 500)
 		return
 	}
+
+	writeChannel := make(chan *BlockChain, 1)
+	newBlock := Block{Data: "TEST"}
+	go mineBlock(&newBlock, writeChannel)
+	blockChain := <-writeChannel
+	spew.Dump("BLOCKCHAINGENESIS: ", blockChain.Blocks)
 
 	output, err := json.Marshal(arbitrary)
 	if err != nil {
