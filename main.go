@@ -1,4 +1,4 @@
-package main
+package gochain
 
 import (
 	"flag"
@@ -20,6 +20,8 @@ type ArbitraryMessage interface{}
 var addr = flag.String("addr", "localhost:3000", "http service address")
 
 func main() {
+	startTestPeering()
+
 	http.Handle("/getPeers", http.HandlerFunc(handleRouteGetPeers))
 	http.Handle("/mineBlock", http.HandlerFunc(handleRouteMineBlock))
 
