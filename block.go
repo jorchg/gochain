@@ -1,4 +1,4 @@
-package gochain
+package main
 
 import (
 	"bytes"

@@ -1,13 +1,14 @@
-package gochain
+package main
 
 import (
 	"flag"
 	"github.com/davecgh/go-spew/spew"
+	"gochain/peer"
+	"log"
 	// "github.com/gorilla/websocket"
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ type ArbitraryMessage interface{}
 var addr = flag.String("addr", "localhost:3000", "http service address")
 
 func main() {
-	startTestPeering()
+	peer.StartTestPeering()
 
 	http.Handle("/getPeers", http.HandlerFunc(handleRouteGetPeers))
 	http.Handle("/mineBlock", http.HandlerFunc(handleRouteMineBlock))
